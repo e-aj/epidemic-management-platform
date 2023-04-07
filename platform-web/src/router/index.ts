@@ -1,7 +1,7 @@
+
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import { message } from "ant-design-vue";
-import './ampMenu'
-import { useStore } from "../store";
+
 
 
 
@@ -32,6 +32,36 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 
+const addRouters = []
+
+
+
+
+
+//动态路由加载方法
+const routerPackag = routers => {
+  console.log(routers)
+  routers.filter(itemRouter => {
+    if (itemRouter.component != "Login") {
+      router.addRoute('Home', {
+        path: `${itemRouter.path}`,
+        name: itemRouter.name,
+        component: () => import(`@/${itemRouter.component}`),//此处根据具体地址进行调整
+        meta: itemRouter.meta
+      });
+    }
+    // 是否存在子路由
+    if (itemRouter.children && itemRouter.children.length) {
+      routerPackag(itemRouter.children);
+    }
+    return true;
+  });
+}
+//调用渲染动态组件方法
+
+
+
+
 
 
 const router = createRouter({
@@ -39,19 +69,21 @@ const router = createRouter({
   routes,
 });
 
+
+
+
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
-  const daitaiRoutes:any = localStorage.getItem('routes')
+  const meauList = localStorage.getItem('meauList')
 
-  if(daitaiRoutes) {
-    const dongtaiRouter:any = [...JSON.parse(daitaiRoutes)]
-   
-  }
-
+  console.log(meauList)
   if (!token && to.name !== "login" ) {
     message.warning("请登录账号");
     next("/login");
-  } else{
+  } else if(!meauList){
+    next();
+  }else{
+    routerPackag(meauList);
     next();
   }
   

@@ -37,7 +37,7 @@ import {useStore } from '../../store/index'
     // const routerList = router.getRoutes().filter(v=>v)
     const routerList = router.options.routes
 
-console.log(routerList)
+    console.log(routerList)
 
     // 跳转首页
     const toIndex = () => {

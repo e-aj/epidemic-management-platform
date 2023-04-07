@@ -2,7 +2,7 @@
 
 学生student_info
 	1.登录 /student/login
-	1.填写个人信息			
+	1.填写个人信息	studentInfo	
 	2.报表填写	reportForm
 		健康状况
 		所在地区
@@ -14,9 +14,10 @@
 		当日健康状况
 	4.返校后管理----afterSchoolForm
 		每日健康状况
+
 辅导员instructor_info
 	1.登录管理/instructorlogin
-	2.查看学生信息----studentInfoList
+	2.查看学生信息----studentList
 	3.报备信息管理----reportDetails
 	4.返校信息管理----backSchoolDetails
 	5.返校后信息管理---afterSchoolDetails
@@ -24,6 +25,8 @@
 管理者adminInfo
 	1.学生返校管理----backSchoolDetails
 	2.学生返校后管理----afterSchoolDetails
+	3..查看辅导员列表----instructorList
+	4.管理员列表----adminList
 
 
 数据库

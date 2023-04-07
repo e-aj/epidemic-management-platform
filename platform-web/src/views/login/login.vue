@@ -101,8 +101,8 @@ interface FormState {
 const activeKey = ref("1");
 
 const formState = reactive<FormState>({
-  userName: "",
-  password: "",
+  userName: "admin",
+  password: "12345678",
 });
 
 // 定义路由
@@ -114,8 +114,8 @@ const studentFinish = (values: any) => {
   studentLogin(formState).then((res: any) => {
     if (res.status === 0) {
       localStorage.setItem("token", res.token);
-      localStorage.setItem("routes",JSON.stringify(res.routes) );
-      store.addRoutes(res.routes, router)
+      localStorage.setItem('meauList', JSON.stringify(res.routes) );
+      console.log()
       message.info("登录成功");
       setTimeout(() => {
         router.push("/");
