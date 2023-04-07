@@ -1,0 +1,46 @@
+学生返校防疫管理系统
+
+学生student_info
+	1.登录 /student/login
+	1.填写个人信息			
+	2.报表填写	reportForm
+		健康状况
+		所在地区
+		活动路线
+	3.填写返校信息表	backSchoolForm
+		返校交通工具
+		返校途径地
+		返校到达地点和时间
+		当日健康状况
+	4.返校后管理----afterSchoolForm
+		每日健康状况
+辅导员instructor_info
+	1.登录管理/instructorlogin
+	2.查看学生信息----studentInfoList
+	3.报备信息管理----reportDetails
+	4.返校信息管理----backSchoolDetails
+	5.返校后信息管理---afterSchoolDetails
+
+管理者adminInfo
+	1.学生返校管理----backSchoolDetails
+	2.学生返校后管理----afterSchoolDetails
+
+
+数据库
+	student_info
+		studentld
+		name
+		grade
+		major
+		dormNumber
+		userName
+		password
+	instructor_info
+		name
+		userName
+		password
+	admin_info
+		name
+		userName
+		password
+		
