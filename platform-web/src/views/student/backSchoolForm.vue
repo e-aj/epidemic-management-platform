@@ -87,6 +87,8 @@ const onSubmit = () => {
     postBackSchoolForm(backSchoolInfo).then(res=>{
         if(res.status == 0){
             message.success(res.message)
+        }else{
+            message.warning(res.message)
         }
     })
 };

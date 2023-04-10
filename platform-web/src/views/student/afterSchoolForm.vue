@@ -7,12 +7,14 @@
         <div class="desc">请填写你每日的健康状况！</div>
         <a-form :model="afterSchoolInfo" :label-col="labelCol" :wrapper-col="wrapperCol">
             <a-form-item label="日期">
-                <a-date-picker v-model:value="afterSchoolInfo.time" format="YYYY-MM-DD" valueFormat="YYYY-MM-DD"/>
+                <input type="textarea" v-model="afterSchoolInfo.time" disabled/>
             </a-form-item>
-            <a-form-item label="当日健康状况">
-                <a-select v-model:value="afterSchoolInfo.heath"  style="width: 100%" placeholder="请选择你的健康状况" :options="options" > </a-select>
+            <a-form-item label="体温">
+                <a-input v-model:value="afterSchoolInfo.temperature" type="textarea" />
             </a-form-item>
-
+            <a-form-item label="有无症状">
+                <a-input v-model:value="afterSchoolInfo.heath" type="textarea" />
+            </a-form-item>
             <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
                 <a-button type="primary" @click="onSubmit">确定</a-button>
                 <a-button style="margin-left: 10px">取消</a-button>
@@ -22,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, reactive, onMounted } from 'vue';
+import {  reactive, onMounted,ref } from 'vue';
 import {postafterSchoolForm,getstudentInfo} from '../../api/student'
 import { message } from 'ant-design-vue';
 
@@ -31,7 +33,8 @@ interface afterSchoolInfoType {
     time: string,
     heath:string,
     studentId:any,
-    name:string
+    name:string,
+    temperature:string
 }
 
 const date = new Date()
@@ -40,19 +43,10 @@ const afterSchoolInfo = reactive<afterSchoolInfoType>({
     heath: '',
     time: '',
     studentId:studentId,
-    name:''
+    name:'',
+    temperature:''
 })
 
-const options = reactive([
-      {
-        value: '正常',
-        label: '正常',
-      },
-      {
-        value: '发烧',
-        label: '发烧',
-      },
-    ]);
 const labelCol = { span: 4 }
 const wrapperCol = { span: 10 }
 
@@ -63,14 +57,24 @@ const onSubmit = () => {
     postafterSchoolForm(afterSchoolInfo).then(res=>{
         if(res.status == 0){
             message.success(res.message)
+        }else{
+            message.warning(res.message)
         }
     })
+   
+};
+
+onMounted(()=>{
     getstudentInfo({ "studentId": studentId }).then(res => {
         if (res.status == 0) {
             afterSchoolInfo.name = res.data.name
+            console.log(afterSchoolInfo.name)
         }
     })
-};
+    let  data = new Date()
+    afterSchoolInfo.time =` ${data.getFullYear()}-${data.getMonth()+1}-${data.getDate()}`
+})
+
 
 
 </script>

@@ -56,7 +56,6 @@ router.post("/addStudent", (req, res) => {
   // 接收表单数据
   const userinfo = req.body;
 
-  console.log(userinfo);
   // 判断数据是否合法
   if (!userinfo.userName || !userinfo.password) {
     return res.send({ status: 1, message: "用户名或密码不能为空！" });
@@ -127,7 +126,7 @@ db.query(sql, userinfo.studentId, (err, results) => {
   if (err) return res.send(err)
 
   // 2. 执行 SQL 语句成功，但是查询到的数据条数不等于 1
-  if (results.length !== 1) return res.send('获取用户信息失败！')
+  if (results.length !== 1) return res.send({ status: 1, message:'获取用户信息失败！'})
 
   // 3. 将用户信息响应给客户端
   res.send({
@@ -190,7 +189,7 @@ db.query(selectSql, [req.body.studentId], (err, results) => {
       if (err) return res.send(err)
     
       // SQL 语句执行成功，但是影响行数不等于 1
-      if (results.affectedRows !== 1) return res.send('新增报表失败！')
+      if (results.affectedRows !== 1) return res.send({ status: 1, message:'新增报表失败！'})
     
       // 新增文章分类成功
       res.send({ status: 0, message: "新增报表成功" });
@@ -210,7 +209,7 @@ db.query(sql, req.body.studentId, (err, results) => {
   if (err) return res.send(err)
 
   // 2. 执行 SQL 语句成功，但是查询到的数据条数不等于 1
-  if (results.length !== 1) return res.send('获取信息失败！')
+  if (results.length !== 1) return res.send({ status: 1, message:'获取信息失败！'})
 
   // 3. 将用户信息响应给客户端
   res.send({
@@ -253,7 +252,7 @@ db.query(sql, userinfo.studentId, (err, results) => {
   if (err) return res.send(err)
 
   // 2. 执行 SQL 语句成功，但是查询到的数据条数不等于 1
-  if (results.length !== 1) return res.send('获取报表信息失败！')
+  if (results.length !== 1) return res.send({ status: 1, message:'获取报表信息失败！'})
 
   // 3. 将用户信息响应给客户端
   res.send({
@@ -317,7 +316,7 @@ db.query(selectSql, [req.body.studentId], (err, results) => {
       if (err) return res.send(err)
     
       // SQL 语句执行成功，但是影响行数不等于 1
-      if (results.affectedRows !== 1) return res.send('新增回校信息失败！')
+      if (results.affectedRows !== 1) return res.send({ status: 1, message:'新增回校信息失败！'})
     
       // 新增文章分类成功
       res.send({ status: 0, message: "新增回校信息成功" });
@@ -337,7 +336,7 @@ db.query(sql, req.body.studentId, (err, results) => {
   if (err) return res.send(err)
 
   // 2. 执行 SQL 语句成功，但是查询到的数据条数不等于 1
-  if (results.length !== 1) return res.send('获取信息失败！')
+  if (results.length !== 1) return res.send({ status: 1, message:'获取信息失败！'})
 
   // 3. 将用户信息响应给客户端
   res.send({
@@ -369,20 +368,38 @@ router.get('/backSchoolFormList', (req, res) => {
 // 添加到校信息
 router.post('/afterSchoolForm',(req,res)=>{
 
+    // 定义查询 分类名称 与 分类别名 是否被占用的 SQL 语句
+      const sql = `select * from afterschool_info where studentId=? or time=?`
 
-      const addSql = `insert into afterschool_info set ?`
+  // 执行查重操作
+db.query(sql, [req.body.studentId, req.body.time], (err, results) => {
+  // 执行 SQL 语句失败
+  if (err) return res.send(err)
+
+  // 分类名称 和 分类别名 都被占用
+  if (results.length === 2) return res.send({ status: 1, message:'今日已填写！'})
+  if (results.length === 1 && results[0].studentId === req.body.studentId && results[0].time === req.body.time) return res.send({ status: 1, message:'今日已填写！！'})
+
+
+  const addSql = `insert into afterschool_info set ?`
   
   
-      db.query(addSql, req.body, (err, results) => {
-        // SQL 语句执行失败
-        if (err) return res.send(err)
-      
-        // SQL 语句执行成功，但是影响行数不等于 1
-        if (results.affectedRows !== 1) return res.send('新增回校信息失败！')
-      
-        // 新增文章分类成功
-        res.send({ status: 0, message: "新增回校信息成功" });
-      })
+  db.query(addSql, req.body, (err, results) => {
+    // SQL 语句执行失败
+    if (err) return res.send(err)
+  
+    // SQL 语句执行成功，但是影响行数不等于 1
+    if (results.affectedRows !== 1) return res.send({ status: 1, message:'填写每日健康状况失败！'})
+  
+    // 新增文章分类成功
+    res.send({ status: 0, message: "填写每日健康状况成功" });
+  })
+})
+
+
+
+
+     
     }
 
   )
@@ -396,7 +413,7 @@ router.post('/deleteStudent',(req,res)=>{
     if (err) return res.sned(err)
   
     // SQL 语句执行成功，但是影响行数不等于 1
-    if (results.affectedRows !== 1) return res.send('删除失败！')
+    if (results.affectedRows !== 1) return res.send({ status: 1, message:'删除失败！'})
 
     res.send({ status: 0, message: "删除成功" });
   })
