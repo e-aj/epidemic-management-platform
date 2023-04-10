@@ -114,7 +114,9 @@ const studentFinish = (values: any) => {
   studentLogin(formState).then((res: any) => {
     if (res.status === 0) {
       localStorage.setItem("token", res.token);
-      localStorage.setItem('meauList', JSON.stringify(res.routes) );
+      localStorage.setItem('role',  res.role);
+      localStorage.setItem('userName',  formState.userName);
+      localStorage.setItem('studentId',  res.studentId);
       console.log()
       message.info("登录成功");
       setTimeout(() => {
@@ -132,6 +134,9 @@ const instructorFinish = (values: any) => {
   instructorLogin(formState).then((res: any) => {
     if (res.status === 0) {
       localStorage.setItem("token", res.token);
+      localStorage.setItem('role',  res.role);
+      localStorage.setItem('userName',  formState.userName);
+      localStorage.setItem('id',  res.id);
       message.info("登录成功");
       setTimeout(() => {
         router.push("/");
@@ -147,6 +152,9 @@ const adminFinish = (values: any) => {
   adminLogin(formState).then((res: any) => {
     if (res.status === 0) {
       localStorage.setItem("token", res.token);
+      localStorage.setItem('role',  res.role);
+      localStorage.setItem('userName',  formState.userName);
+      localStorage.setItem('id',  res.id);
       message.info("登录成功");
       setTimeout(() => {
         router.push("/");

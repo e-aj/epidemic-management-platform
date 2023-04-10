@@ -7,7 +7,7 @@ const db = require("../db/index");
 // 用这个包来生成 Token 字符串
 const jwt = require("jsonwebtoken");
 
-// 学生登录
+// 登录
 router.post("/login", (req, res) => {
   const userinfo = req.body;
 
@@ -41,12 +41,13 @@ router.post("/login", (req, res) => {
       message: "登录成功！",
       // 为了方便客户端使用 Token，在服务器端直接拼接上 Bearer 的前缀
       token: "Bearer " + tokenStr,
+      role:results[0].role
     });
   });
 
 });
 
-//添加学生
+//添加
 router.post("/addInstructor", (req, res) => {
   // 接收表单数据
   const userinfo = req.body;
@@ -91,6 +92,59 @@ router.post("/addInstructor", (req, res) => {
     );
   });
 });
+
+
+
+router.post('/deleteInstructor',(req,res)=>{
+  const sql = `update instructor_info set is_delete=1 where id=?`
+  db.query(sql, req.body.id, (err, results) => {
+    // 执行 SQL 语句失败
+    if (err) return res.sned(err)
+  
+    // SQL 语句执行成功，但是影响行数不等于 1
+    if (results.affectedRows !== 1) return res.send('删除失败！')
+  
+    res.send({ status: 0, message: "删除成功" });
+  })
+})
+
+
+router.get('/instructorList', (req, res) => {
+  const sql = 'select * from instructor_info where is_delete = 0  '
+
+  db.query(sql, (err, results) => {
+    // 1. 执行 SQL 语句失败
+    if (err) return res.send(err)
+
+    // 2. 执行 SQL 语句成功
+    res.send({
+      status: 0,
+      message: '获取辅导员列表成功！',
+      data: results,
+    })
+  })
+})
+
+
+router.post('/changeInstructorInfo',(req,res)=>{
+  const sql = `update instructor_info set ? where id=?`
+
+  db.query(sql, [req.body, req.body.id], (err, results) => {
+    // 执行 SQL 语句失败
+    if (err) return res.send(err)
+  
+    // SQL 语句执行成功，但是影响行数不等于 1
+    if (results.affectedRows !== 1) return res.send('修改辅导员信息失败！')
+  
+
+    res.send({ status: 0, message: "修改辅导员信息成功！" });
+  })
+  
+
+
+})
+
+
 
 // 将路由对象共享出去
 module.exports = router;

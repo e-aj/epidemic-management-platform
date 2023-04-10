@@ -2,22 +2,26 @@
   <a-layout>
     <a-layout-sider>
       <div class="title" @click="toIndex">学生返校防疫管理系统</div>
-      <a-menu mode="inline" theme="llight" @select="menuSelect"> 
-        <a-sub-menu key="sub1" v-for="item in routerList">
-          <template #title>{{ item}}</template>
-        </a-sub-menu>
-      
+
+
+      <a-menu mode="vertical" @click="menuSelect">
+        <a-menu-item :key="item.path" v-for="item in routerList">
+          {{ item.meta.title }}
+        </a-menu-item>
       </a-menu>
+
+
     </a-layout-sider>
 
     <a-layout>
 
       <a-layout-header class="header">
-        <!-- <Head/> -->
+
+        <Head />
       </a-layout-header>
 
 
-      <a-layout-content>
+      <a-layout-content style="padding: 0 20px;">
         <router-view />
       </a-layout-content>
 
@@ -26,28 +30,30 @@
 </template>
 <script lang="ts" setup>
 import { defineComponent } from "vue";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import Head from "./head.vue";
-import {useStore } from '../../store/index'
+import { useStore } from '../../store/index'
 
-    // 定义router
-    const router = useRouter();
-    const store = useStore()
+// 定义router
+const router = useRouter();
+const store = useStore()
 
-    // const routerList = router.getRoutes().filter(v=>v)
-    const routerList = router.options.routes
+const role = localStorage.getItem('role')
 
-    console.log(routerList)
 
-    // 跳转首页
-    const toIndex = () => {
-      router.push("/");
-    };
+const routerList = router.getRoutes().filter(v => v.meta.role == role || v.meta.role == '3')
+// const routerList = router.options.routes
 
-    //切换路由
-    const menuSelect = (item: any, key: any, selectedKeys: any) => {
-      router.push(item.key);
-    };
+
+// 跳转首页
+const toIndex = () => {
+  router.push("/");
+};
+
+//切换路由
+const menuSelect = (item: any, key: any, keyPath: any) => {
+  router.push(item.key)
+};
 
 
 </script>
@@ -55,17 +61,29 @@ import {useStore } from '../../store/index'
 .ant-layout {
   width: 100%;
   height: 100%;
+
+  .ant-layout-header {
+    border-bottom: 1px solid #999;
+  }
+
+  .ant-layout-content {
+    margin-top: 10px;
+  }
+
   .ant-layout-sider {
     .title {
       color: #fff;
       text-align: center;
-      font-size: 30px;
+      font-size: 24px;
       cursor: pointer;
+      font-family: 'Courier New', Courier, monospace;
     }
+
     .ant-layout-sider-children {
       background-image: url("../../assets/sider_bg.jpg");
     }
   }
+
   .ant-layout-header {
     background: #f0f2f5;
   }
@@ -83,9 +101,11 @@ import {useStore } from '../../store/index'
   float: right;
   margin: 16px 0 16px 24px;
 }
+
 .changeAvatar {
   .now {
     margin: 5px 5px 20px;
+
     img {
       width: 100px;
       height: 100px;
@@ -93,14 +113,17 @@ import {useStore } from '../../store/index'
       border-radius: 50%;
     }
   }
+
   .change {
     margin: 50px 5px 20px;
+
     .upload {
       margin: 0 10px;
       display: inline-block;
       border: 1px solid #ccc;
       width: 100px;
       height: 100px;
+
       .add {
         line-height: 100px;
         text-align: center;
@@ -108,17 +131,19 @@ import {useStore } from '../../store/index'
         color: #ccc;
         cursor: pointer;
         position: relative;
+
         img {
           position: absolute;
           left: 0;
           width: 100px;
           height: 100px;
         }
+
         input {
           display: none;
         }
       }
     }
   }
-}
-</style>
+
+}</style>

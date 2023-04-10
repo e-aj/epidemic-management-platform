@@ -1,5 +1,5 @@
 <template>
-  <div class="index">欢迎来到！后台管理系统！</div>
+  <div class="index">欢迎来到！学生返校防疫管理系统！</div>
 </template>
 <style lang="less" scoped>
 .index {

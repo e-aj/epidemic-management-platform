@@ -2,7 +2,7 @@
     <div>
       <a-breadcrumb>
         <a-breadcrumb-item><a href="index">首页</a></a-breadcrumb-item>
-        <a-breadcrumb-item><a href="">返校管理</a></a-breadcrumb-item>
+        <a-breadcrumb-item><a href="">报表列表</a></a-breadcrumb-item>
       </a-breadcrumb>
       <a-tag color="green" @click="excel">导出excel</a-tag>
       <a-table :columns="columns" :data-source="ReportList" :pagination="false" bordered>
@@ -21,7 +21,7 @@
   </template>
   
   <script setup lang="ts">
-  import { getBackSchoolFormList } from '../../api/student'
+  import { getReportFormList } from '../../api/student'
   import { onMounted, ref, reactive } from 'vue';
   import { message } from 'ant-design-vue'
 
@@ -45,30 +45,30 @@
       width: 150,
     },
     {
-      title: "返校交通工具",
-      dataIndex: "vehicle",
+      title: "地区",
+      dataIndex: "erea",
       width: 150,
     },
     {
-      title: "返校途径点",
-      dataIndex: "pathologically",
+      title: "活动路线",
+      dataIndex: "activeLine",
       width: 150,
     },
   ];
   
   // 用户数据
-  interface backSchoolInfoType {
+  interface ReportInfoType {
     studentId?:any,
     heathy:string,
-    vehicle:string,
-    pathologically:string,
+    activeLine:string,
+    erea:string,
     name:string
   }
-  let ReportList = ref<backSchoolInfoType[]>([]);
+  let ReportList = ref<ReportInfoType[]>([]);
   
   
   const getList = () => {
-    getBackSchoolFormList().then(res => {
+    getReportFormList().then(res => {
       ReportList.value = res.data
     })
   }

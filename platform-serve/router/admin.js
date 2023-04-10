@@ -42,6 +42,7 @@ router.post("/login", (req, res) => {
       message: "登录成功！",
       // 为了方便客户端使用 Token，在服务器端直接拼接上 Bearer 的前缀
       token: "Bearer " + tokenStr,
+      role:results[0].role
     });
   });
 
@@ -93,5 +94,53 @@ router.post("/addAdmin", (req, res) => {
   });
 });
 
+
+router.post('/deleteAdmin',(req,res)=>{
+  const sql = `update admin_info set is_delete=1 where id=?`
+  db.query(sql, req.body.id, (err, results) => {
+    // 执行 SQL 语句失败
+    if (err) return res.sned(err)
+  
+    // SQL 语句执行成功，但是影响行数不等于 1
+    if (results.affectedRows !== 1) return res.send('删除失败！')
+  
+    res.send({ status: 0, message: "删除成功" });
+  })
+})
+
+
+router.get('/adminList', (req, res) => {
+  const sql = 'select * from admin_info where is_delete = 0  '
+
+  db.query(sql, (err, results) => {
+    // 1. 执行 SQL 语句失败
+    if (err) return res.send(err)
+
+    // 2. 执行 SQL 语句成功
+    res.send({
+      status: 0,
+      message: '获取辅导员列表成功！',
+      data: results,
+    })
+  })
+})
+
+
+
+// 修改管理员信息
+router.post('/changeAdminInfo',(req,res)=>{
+  const sql = 'update admin_info  set ? where id=? '
+
+  db.query(sql, [req.body, req.body.id], (err, result) => {
+    if (err) return res.send({ status: 1, message: err.message });
+
+    if (result.affectedRows !== 1)
+      return res.send({ status: 1, message: "修改用户信息失败！" });
+
+    // 成功
+    res.send({ status: 0, message: "修改用户信息成功！" });
+  });
+  
+})
 // 将路由对象共享出去
 module.exports = router;
